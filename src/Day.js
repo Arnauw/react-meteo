@@ -2,7 +2,7 @@ import React from "react";
 
 
 function Day(props) {
-    let cls = "page-item"
+    let cls = "page-item";
 
     if (props.isActive){
         cls += " active"
@@ -11,10 +11,10 @@ function Day(props) {
 
     return (
         <li className={cls}>
-            <a className="page-link" href="#" onClick={(event) => {
+            <button className="page-link" href="" onClick={(event) => {
                 props.handleClick(props.label)
 
-            }}>{props.label}</a>
+            }}>{props.label}</button>
         </li>
     );
 }

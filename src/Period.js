@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import './Day';
-import Day from "./Day";
 
 function Period(props) {
     return (
