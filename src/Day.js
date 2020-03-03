@@ -1,7 +1,7 @@
 import React from "react";
 
 
-function Day(props) {
+export function Day(props) {
     let cls = "page-item";
 
     if (props.isActive){
@@ -18,5 +18,3 @@ function Day(props) {
         </li>
     );
 }
-
-export default Day;

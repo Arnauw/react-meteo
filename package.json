@@ -18,7 +18,12 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "globals": {
+      "it": true,
+      "expect": true,
+      "describe": true
+    }
   },
   "browserslist": {
     "production": [
@@ -31,5 +36,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "prop-types": "^15.7.2"
   }
 }

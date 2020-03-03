@@ -1,8 +1,13 @@
 import React from 'react';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Day from "./Day";
-import Period from "./Period";
+import {Day} from "./Day";
+import {Period} from "./Period";
+import {Spinner, GrowSpinner, CircularSpinner} from "./Components/Spinner";
+import {AlertSucces, AlertError} from "./Components/Alert";
+import {getDayOfTheWeekFirstLetterCapitalized} from "./Utils/utils";
+import {getNextDaysOfTheWeek} from "./Utils/utils";
+import {Meteo} from "./Components/Meteo/Meteo";
+
 
 const meteo_key = "e184943229e3aef2a626130052103510";
 const geo_key = "a957754acf3dae958ecb2effe3ff8c58";
@@ -14,18 +19,12 @@ const URLipify = "https://geo.ipify.org/api/v1?apiKey=at_HW1nsY1U7FJ8t5oT2rB03In
 
 function App() {
 
-    function getDayOfTheWeekFirstLetterCapitalized(date) {
-        if (date === false || date === undefined) {
-            date = new Date();
-        }
-        const dayOFTheWeek = new Intl.DateTimeFormat('fr-FR', {weekday: 'long'}).format(new Date(date));
-        const firstLetterCapitalizedDOTW = dayOFTheWeek[0].toUpperCase() + dayOFTheWeek.slice(1);
 
-        return firstLetterCapitalizedDOTW
-    }
+    const today = getDayOfTheWeekFirstLetterCapitalized();
 
-    const [activeDay, setActive] = React.useState(getDayOfTheWeekFirstLetterCapitalized());
-    const [loading, setLoading] = React.useState(true);
+    const [activeDay, setActive] = React.useState(today);
+    const [hasBeenSubmitted, setHasBeenSubmitted] = React.useState(false);
+    const [submittedCity, setSubmittedCity] = React.useState('Bordeaux');
     const [error, setError] = React.useState(null);
     const [meteo, setMeteo] = React.useState({});
 
@@ -33,71 +32,121 @@ function App() {
     // const activeDay = state[0];
     // const setActiveDay = state[1];
 
-    async function callAPI() {
 
-        const ipResponse = await fetch(URLipify);
+    React.useEffect(() => {
+        console.log('api calling...');
 
-        const bodyIpResponse = await ipResponse.json();
+        async function callAPI() {
 
-        let visitorIP = bodyIpResponse.ip;
+            const ipResponse = await fetch(URLipify);
 
-        console.log(visitorIP);
+            const bodyIpResponse = await ipResponse.json();
 
-        if (ipResponse.ok) {
+            let visitorIP = bodyIpResponse.ip;
 
-            const URLgeo = `http://api.ipstack.com/${visitorIP}?access_key=${geo_key}&format=1`;
+            console.log(visitorIP);
 
-            const cityResponse = await fetch(URLgeo);
+            if (ipResponse.ok) {
 
-            const bodyCityResponse = await cityResponse.json();
+                const URLgeo = `http://api.ipstack.com/${visitorIP}?access_key=${geo_key}&format=1`;
 
-            let visitorCity = bodyCityResponse.city;
+                const cityResponse = await fetch(URLgeo);
 
-            console.log("D'apres ton ip, tu es dans les environs de : " + visitorCity);
+                const bodyCityResponse = await cityResponse.json();
 
-            if (cityResponse.ok) {
+                let visitorCity = bodyCityResponse.city;
 
-                const URLmeteo = `http://api.openweathermap.org/data/2.5/forecast?q=${visitorCity}&units=${units}&appid=${meteo_key}&lang=fr`;
-
-                const meteoResponse = await fetch(URLmeteo);
-
-                const bodyMeteoResponse = await meteoResponse.json();
-
-                setLoading(false);
-
-                if (meteoResponse.ok) {
-
-                    const data = bodyMeteoResponse.list[0];
-
-                    console.log(data);
+console.log('visitor city ', bodyCityResponse.city);
 
 
-                    
-                    
-                    let kikoos = bodyMeteoResponse.list;
 
-                    kikoos.map(kikoo => {
+                console.log("D'apres ton ip, tu es dans les environs de : " + visitorCity);
 
-                        let thisLoopTurnDay = getDayOfTheWeekFirstLetterCapitalized(kikoo.dt_txt);
+                if (cityResponse.ok) {
+
+                    const URLmeteo = `http://api.openweathermap.org/data/2.5/forecast?q=${visitorCity}&units=${units}&appid=${meteo_key}&lang=fr`;
+
+                    const meteoResponse = await fetch(URLmeteo);
+
+                    const bodyMeteoResponse = await meteoResponse.json();
+
+                    // setLoading(false);
+
+                    if (meteoResponse.ok) {
 
 
-                            if (getDayOfTheWeekFirstLetterCapitalized(kikoo.dt_txt) !== getDayOfTheWeekFirstLetterCapitalized()) {
+                        let meteoList = bodyMeteoResponse.list;
 
-                                console.log(thisLoopTurnDay);
-                                console.log("Temps : " + kikoo.weather[0].description);
-                                console.log("Température : "+ kikoo.main.temp +"° C")
+                        const meteoOfTheWeek = meteoList.reduce((accumulator, data) => {
+
+                            const day = getDayOfTheWeekFirstLetterCapitalized(data.dt_txt);
+
+                            const description = data.weather[0].description[0].toUpperCase() + data.weather[0].description.slice(1);
+
+                            console.log(day);
+
+                            if (!accumulator[day]) {
+                                accumulator[day] = []
                             }
-                        }
-                    );
+
+                            accumulator[day].push({
+                                city: visitorCity,
+                                weather: data.weather[0].main,
+                                description: description,
+                                temp: data.main.temp,
+                                icon: data.weather[0].icon,
+                                feel: data.main.feels_like,
+                                humidity: data.main.humidity,
+                                windDirection: data.wind.deg
+                            });
+
+                            return accumulator;
+                        }, {});
 
 
-                    console.log(bodyMeteoResponse);
+                        setMeteo(meteoOfTheWeek);
+                        setError(null);
 
+                    } else {
+                        const meteoOfTheWeek = {
+                            errorMessage: bodyMeteoResponse.message
+                        };
+                        setMeteo(meteoOfTheWeek);
+                        setError(bodyMeteoResponse.message);
+                    }
+                }
+            }
+        }
 
-                    // petite fonction qui capitalize la premiere lettre d'une string
+        // if (!hasBeenSubmitted) {
+        //
+        // callAPI();
+        //
+        // } else {
+
+            async function callAPI2(visitorCity){
+
+            console.log('CALL API 2');
+
+            const URLmeteo = `http://api.openweathermap.org/data/2.5/forecast?q=${visitorCity}&units=${units}&appid=${meteo_key}&lang=fr`;
+
+            const meteoResponse = await fetch(URLmeteo);
+
+            const bodyMeteoResponse = await meteoResponse.json();
+
+            if (meteoResponse.ok) {
+
+                const meteoOfTheWeek = bodyMeteoResponse.list.reduce((accumulator, data) => {
+
+                    const day = getDayOfTheWeekFirstLetterCapitalized(data.dt_txt);
+
                     const description = data.weather[0].description[0].toUpperCase() + data.weather[0].description.slice(1);
 
-                    const parsedMeteo = {
+                    if (!accumulator[day]) {
+                        accumulator[day] = []
+                    }
+
+                    accumulator[day].push({
                         city: visitorCity,
                         weather: data.weather[0].main,
                         description: description,
@@ -105,25 +154,57 @@ function App() {
                         icon: data.weather[0].icon,
                         feel: data.main.feels_like,
                         humidity: data.main.humidity,
-                        date: data.dt_txt,
-                    };
-                    setMeteo(parsedMeteo);
-                    setError(null);
+                        windDirection: data.wind.deg
+                    });
 
-                } else {
-                    setError(bodyMeteoResponse.message);
-                }
+                    return accumulator;
+                }, {});
+
+                // petite fonction qui capitalize la premiere lettre d'une string
+                // const description = data.weather[0].description[0].toUpperCase() + data.weather[0].description.slice(1);
+
+                setMeteo(meteoOfTheWeek);
+                setError(null);
+
+            } else {
+                const meteoOfTheWeek = {
+                    errorMessage: bodyMeteoResponse.message
+                };
+                setMeteo(meteoOfTheWeek);
+                setError(bodyMeteoResponse.message);
             }
         }
+
+
+
+
+            callAPI2(submittedCity);
+
+
+        // }
+
+    }, [submittedCity]);
+
+    console.log('kek' ,submittedCity);
+
+    console.log('kek2', hasBeenSubmitted);
+
+    const loading = !error && !meteo[activeDay];
+
+    const activeDayMeteo = !loading && meteo[activeDay];
+
+    let city = !loading && meteo[activeDay][0].city;
+
+
+    function handleSubmit(event) {
+        alert('Le nom a été soumis : kikoo');
+        event.preventDefault();
+        setHasBeenSubmitted(true);
+        setSubmittedCity(event.target[0].value);
+        console.log("Vous avez taper : ", event.target[0].value);
     }
 
 
-    React.useEffect(() => {
-        console.log('api calling...');
-
-        callAPI();
-
-    }, []);
 
     return (
         <div>
@@ -131,54 +212,40 @@ function App() {
                 <button className="btn btn-success mb-4 mt-4">Météo</button>
             </div>
             <Period>
-                <Day label="Lundi" isActive={activeDay === "Lundi"} handleClick={setActive}/>
-                <Day label="Mardi" isActive={activeDay === "Mardi"} handleClick={setActive}/>
-                <Day label="Mercredi" isActive={activeDay === "Mercredi"} handleClick={setActive}/>
-                <Day label="Jeudi" isActive={activeDay === "Jeudi"} handleClick={setActive}/>
-                <Day label="Vendredi" isActive={activeDay === "Vendredi"} handleClick={setActive}/>
-                <Day label="Samedi" isActive={activeDay === "Samedi"} handleClick={setActive}/>
-                <Day label="Dimanche" isActive={activeDay === "Dimanche"} handleClick={setActive}/>
+                {getNextDaysOfTheWeek(today, 5).map(function (day) {
+
+                    return (
+                        <Day label={day} isActive={activeDay === day} handleClick={setActive}/>
+                    )
+                })
+                }
+
             </Period>
-
-            {loading ?
-                <div className="d-flex justify-content-center mt-4">
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="sr-only">Loading...</span>
+            <h2 className={"text-center"}>Météo de {city}</h2>
+            <form action="" onSubmit={handleSubmit} className={"d-flex justify-content-center"}>
+                <div className="form-group mx-sm-2 mb-2">
+            <input type="text" placeholder="Search.."  className={"text-center"} />
+            <button type="submit" className={"text-center btn btn-primary ml-2"}>Submit</button>
                     </div>
-                </div> : error ?
-                    <div className="alert alert-danger">
-                        <p className="text-danger text-center">{error}</p>
-                    </div>
-                    :
-                    <div className="text-center mt-3">
+            </form>
+            {loading ? <Spinner color="dark" type="grow"/>
+                : error ? <AlertError title={true} color={"warning"} pContent={activeDayMeteo.errorMessage}/>
+                    : (
 
-                        <div className="mt-3">
-                            Fetched Date : {meteo.date} (testing)
-                        </div>
+                        <div className="text-center mt-3" style={{
+                            display: "flex",
+                            justifyContent: "space-evenly"
 
-                        <div className="mt-3">
-                            Metéo de {meteo.city} le {activeDay} : {meteo.weekday}
-                        </div>
-                        <div className="mt-3">
-                            Temperature réel : {meteo.temp} ° C
-                        </div>
-                        <div className="mt-3">
-                            Température ressenti : {meteo.feel} ° C
-                        </div>
-                        <div className="mt-3">
-                            Humidité : {meteo.humidity} %
-                        </div>
-                        <div className="mt-3">
-                            Temps : {meteo.description}
-                        </div>
-                        <div className="mt-3">
-                            <img
-                                src={"https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/" + meteo.icon + ".png"}
-                                alt={meteo.description}/>
-                        </div>
-                    </div>
-            }
+                        }}>
 
+                            {
+                            activeDayMeteo.map((hour) => <div className={"bg bg-secondary rounded"} style={{width: "20%", border: "1px black solid"}}
+                            ><Meteo
+                                meteo={hour} activeDay={activeDay}
+                            />
+                            </div>)
+                        }</div>
+                    )}
         </div>
     );
 }
