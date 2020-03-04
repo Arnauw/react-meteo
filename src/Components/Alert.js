@@ -14,7 +14,7 @@ export function AlertSucces({title = true, color = "success", pContent = "Error"
     </div>
 }
 
-export function AlertError({title = true, color = "danger", pContent = "Error"}) {
+export function AlertError({title = true, color = "danger", pContent = "Error", bottomContent = 'La ville n\'existe pas'}) {
 
     return <div className={`text-center alert alert-${color}`} role="alert">
 
@@ -22,11 +22,9 @@ export function AlertError({title = true, color = "danger", pContent = "Error"})
 
         <p>{pContent}</p>
         <hr/>
-        <p className="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+        <p className="mb-0">{bottomContent}</p>
     </div>
 }
-
-
 
 AlertSucces.propTypes = {
     title: PropTypes.bool,
@@ -39,5 +37,6 @@ AlertError.propTypes = {
     title: PropTypes.bool,
     color: PropTypes.oneOf(["primary", "secondary", "success",
         "warning", "danger", "light", "dark", "info", "muted", "white"]),
-    pContent: PropTypes.string
+    pContent: PropTypes.string,
+    bottomContent: PropTypes.string
 };

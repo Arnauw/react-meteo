@@ -56,8 +56,7 @@ function App() {
 
                 let visitorCity = bodyCityResponse.city;
 
-console.log('visitor city ', bodyCityResponse.city);
-
+                console.log('visitor city ', bodyCityResponse.city);
 
 
                 console.log("D'apres ton ip, tu es dans les environs de : " + visitorCity);
@@ -124,7 +123,7 @@ console.log('visitor city ', bodyCityResponse.city);
         //
         // } else {
 
-            async function callAPI2(visitorCity){
+        async function callAPI2(visitorCity) {
 
             console.log('CALL API 2');
 
@@ -132,8 +131,10 @@ console.log('visitor city ', bodyCityResponse.city);
 
             const meteoResponse = await fetch(URLmeteo);
 
-            const bodyMeteoResponse = await meteoResponse.json();
+            console.log("meteoResponse", meteoResponse);
 
+            const bodyMeteoResponse = await meteoResponse.json();
+            console.log("bodyMeteoResponse", bodyMeteoResponse);
             if (meteoResponse.ok) {
 
                 const meteoOfTheWeek = bodyMeteoResponse.list.reduce((accumulator, data) => {
@@ -167,43 +168,57 @@ console.log('visitor city ', bodyCityResponse.city);
                 setError(null);
 
             } else {
+
+                console.log(error);
+
                 const meteoOfTheWeek = {
                     errorMessage: bodyMeteoResponse.message
                 };
                 setMeteo(meteoOfTheWeek);
-                setError(bodyMeteoResponse.message);
+
+                bodyMeteoResponse.message === 'city not found' ?
+                    setError({message: 'La ville que vous recherchez n\'as pas été trouvé ou n\'existe pas.',
+                        response: bodyMeteoResponse.message
+                    })
+                 : setError({response: bodyMeteoResponse.message});
+
+
+
             }
         }
 
 
-
-
-            callAPI2(submittedCity);
+        callAPI2(submittedCity);
 
 
         // }
 
     }, [submittedCity]);
 
-    console.log('kek' ,submittedCity);
+    console.log('submittedCity', submittedCity);
 
-    console.log('kek2', hasBeenSubmitted);
+    console.log('hasBeenSubmitted', hasBeenSubmitted);
 
     const loading = !error && !meteo[activeDay];
 
+    console.log('loading ?', !error && !meteo[activeDay], 'error ?', !error);
+    console.log('error : ', error);
+
     const activeDayMeteo = !loading && meteo[activeDay];
 
-    let city = !loading && meteo[activeDay][0].city;
+    console.log("activeDayMeteo", !loading && meteo[activeDay], activeDayMeteo);
 
+
+    // let city = !loading && meteo[activeDay][0].city;
+
+    // let city = "Bordeaux";
 
     function handleSubmit(event) {
-        alert('Le nom a été soumis : kikoo');
         event.preventDefault();
         setHasBeenSubmitted(true);
         setSubmittedCity(event.target[0].value);
-        console.log("Vous avez taper : ", event.target[0].value);
+        console.log("Vous avez soumis : ", event.target[0].value);
     }
-
 
 
     return (
@@ -221,15 +236,16 @@ console.log('visitor city ', bodyCityResponse.city);
                 }
 
             </Period>
-            <h2 className={"text-center"}>Météo de {city}</h2>
+
+            <h2 className={"text-center"}>Météo de {submittedCity}</h2>
             <form action="" onSubmit={handleSubmit} className={"d-flex justify-content-center"}>
                 <div className="form-group mx-sm-2 mb-2">
-            <input type="text" placeholder="Search.."  className={"text-center"} />
-            <button type="submit" className={"text-center btn btn-primary ml-2"}>Submit</button>
-                    </div>
+                    <input type="text" placeholder="Search.." className={"text-center"}/>
+                    <button type="submit" className={"text-center btn btn-primary ml-2"}>Submit</button>
+                </div>
             </form>
             {loading ? <Spinner color="dark" type="grow"/>
-                : error ? <AlertError title={true} color={"warning"} pContent={activeDayMeteo.errorMessage}/>
+                : error ? <AlertError title={true} color={"warning"} pContent={error.response} bottomContent={error.message}/>
                     : (
 
                         <div className="text-center mt-3" style={{
@@ -238,13 +254,16 @@ console.log('visitor city ', bodyCityResponse.city);
 
                         }}>
 
-                            {
-                            activeDayMeteo.map((hour) => <div className={"bg bg-secondary rounded"} style={{width: "20%", border: "1px black solid"}}
-                            ><Meteo
-                                meteo={hour} activeDay={activeDay}
-                            />
-                            </div>)
-                        }</div>
+                            {activeDayMeteo ?
+                                activeDayMeteo.map((hour) =>
+                                    <div className={"bg bg-secondary rounded"}
+                                         style={{width: "20%", border: "1px black solid"}}
+
+                                    ><Meteo
+                                        meteo={hour} activeDay={activeDay}
+                                    />
+                                    </div>) : <div>ERROR</div>
+                            }</div>
                     )}
         </div>
     );
