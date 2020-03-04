@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/react-meteo/static/css/main.122b0466.chunk.css",
+    "main.css": "/react-meteo/static/css/main.aa3f17da.chunk.css",
     "main.js": "/react-meteo/static/js/main.65495966.chunk.js",
     "main.js.map": "/react-meteo/static/js/main.65495966.chunk.js.map",
     "runtime-main.js": "/react-meteo/static/js/runtime-main.f709eaff.js",
@@ -9,17 +9,17 @@
     "static/js/2.f63f42d8.chunk.js": "/react-meteo/static/js/2.f63f42d8.chunk.js",
     "static/js/2.f63f42d8.chunk.js.map": "/react-meteo/static/js/2.f63f42d8.chunk.js.map",
     "index.html": "/react-meteo/index.html",
-    "precache-manifest.a720b9124ce01d37f6484a9365f81396.js": "/react-meteo/precache-manifest.a720b9124ce01d37f6484a9365f81396.js",
+    "precache-manifest.3739b1fe12d4e950a3dbb19a6805c149.js": "/react-meteo/precache-manifest.3739b1fe12d4e950a3dbb19a6805c149.js",
     "service-worker.js": "/react-meteo/service-worker.js",
     "static/css/2.47e06e2e.chunk.css.map": "/react-meteo/static/css/2.47e06e2e.chunk.css.map",
-    "static/css/main.122b0466.chunk.css.map": "/react-meteo/static/css/main.122b0466.chunk.css.map",
+    "static/css/main.aa3f17da.chunk.css.map": "/react-meteo/static/css/main.aa3f17da.chunk.css.map",
     "static/js/2.f63f42d8.chunk.js.LICENSE.txt": "/react-meteo/static/js/2.f63f42d8.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f709eaff.js",
     "static/css/2.47e06e2e.chunk.css",
     "static/js/2.f63f42d8.chunk.js",
-    "static/css/main.122b0466.chunk.css",
+    "static/css/main.aa3f17da.chunk.css",
     "static/js/main.65495966.chunk.js"
   ]
 }
