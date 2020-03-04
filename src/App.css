@@ -1,46 +1,86 @@
-.App {
-  text-align: center;
+.alert-title-none {
+    display: none;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.meteo-card-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.meteo-card {
+    margin-top: 20px;
+    width: 12%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.meteo-card img {
+    width: 66%;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+.days-container {
+  width: 100%;
+}
+
+.days-nav {
+  width: 75%;
+}
+
+.main-title {
+  width: 15%;
+}
+
+li {
+  width: 20%;
+}
+
+li button {
+  width: 100%;
+}
+
+.days-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media screen and (max-width: 760px) {
+
+    .meteo-card-container {
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .meteo-card {
+        margin-top: 20px;
+        width: 66%;
+        align-self: center;
+    }
+
+  /*.days-container {*/
+  /*  flex-direction: column;*/
+  /*}*/
+
+  ul {
+    flex-direction: column;
   }
-  to {
-    transform: rotate(360deg);
+
+  li {
+    align-self: center;
+    width: 40%;
   }
 }
 
-.alert-title-none{
-  display: none;
-}
+@media screen and (max-width: 460px) {
 
-.App {
-  transform: rotate(90deg);
+
 }

@@ -1,10 +1,21 @@
 import React from "react";
 import {render} from "react-dom";
 
-export function Meteo({meteo, activeDay}) {
+export function Meteo({meteo, activeDay, index}) {
 
     return(
         <>
+
+            <div className={"mt-3"}>
+               Le { meteo.date }
+            </div>
+
+
+            <div className={"mt-3"}>
+                { (index-3).toString().length === 1 ? '0' + (index-3) : index-3} H - {(index).toString().length === 1 ? '0' + (index) : index} H
+            </div>
+
+
             <div className="mt-3">
                 <img
                     src={"https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/" + meteo.icon + ".png"}
@@ -24,51 +35,51 @@ export function Meteo({meteo, activeDay}) {
                 Température ressenti : {meteo.feel} ° C
             </div>
 
-            <div className="mt-3">
+            <div className="mt-3 mb-3">
                 Humidité : {meteo.humidity} %
             </div>
 
 
-            <div className={"compass"} style={
-                {
-                    position: "relative",
-                }
-            }>
-                <div className={"North"}>Nord <div>0</div></div>
-                <div className={"West"} style={
-                    {
-                        position: "absolute",
-                        top: "140px",
-                        left: "35%"
-                    }
-                }>West <div>270</div></div>
+            {/*<div className={"compass"} style={*/}
+            {/*    {*/}
+            {/*        position: "relative",*/}
+            {/*    }*/}
+            {/*}>*/}
+            {/*    <div className={"North"}>Nord <div>0</div></div>*/}
+            {/*    <div className={"West"} style={*/}
+            {/*        {*/}
+            {/*            position: "absolute",*/}
+            {/*            top: "140px",*/}
+            {/*            left: "35%"*/}
+            {/*        }*/}
+            {/*    }>West <div>270</div></div>*/}
 
-                <div className={"East"} style={
-                    {
-                        position: "absolute",
-                        top: "140px",
-                        left: "65%"
-                    }
-                }>East <div>90</div></div>
-                <div className="mt-3" style={
-                    {
-                        transform: `rotate(${parseFloat(meteo.windDirection) - 90}deg)`,
-                        // transform: `rotate(deg)`
-                        height: '200px',
-                        position: 'relative',
-                        top: '-50px'
-                    }
+            {/*    <div className={"East"} style={*/}
+            {/*        {*/}
+            {/*            position: "absolute",*/}
+            {/*            top: "140px",*/}
+            {/*            left: "65%"*/}
+            {/*        }*/}
+            {/*    }>East <div>90</div></div>*/}
+            {/*    <div className="mt-3" style={*/}
+            {/*        {*/}
+            {/*            transform: `rotate(${parseFloat(meteo.windDirection) - 90}deg)`,*/}
+            {/*            // transform: `rotate(deg)`*/}
+            {/*            height: '200px',*/}
+            {/*            position: 'relative',*/}
+            {/*            top: '-50px'*/}
+            {/*        }*/}
 
-                }>
-                    Sens du vent : {meteo.windDirection} degrés =>
-                </div>
-                <div className={"South"} style={
-                    {
-                        position: "relative",
-                        top: "30px"
-                    }
-                }>Sud <div>180</div></div>
-            </div>
+            {/*    }>*/}
+            {/*        Sens du vent : {meteo.windDirection} degrés =>*/}
+            {/*    </div>*/}
+            {/*    <div className={"South"} style={*/}
+            {/*        {*/}
+            {/*            position: "relative",*/}
+            {/*            top: "30px"*/}
+            {/*        }*/}
+            {/*    }>Sud <div>180</div></div>*/}
+            {/*</div>*/}
             {/*<AlertSucces title={false} color={"warning"} pContent={meteo.errorMessage}/>*/}
         </>
     )

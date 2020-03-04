@@ -155,7 +155,8 @@ function App() {
                         icon: data.weather[0].icon,
                         feel: data.main.feels_like,
                         humidity: data.main.humidity,
-                        windDirection: data.wind.deg
+                        windDirection: data.wind.deg,
+                        date: data.dt_txt
                     });
 
                     return accumulator;
@@ -220,12 +221,15 @@ function App() {
         console.log("Vous avez soumis : ", event.target[0].value);
     }
 
+    let i = 0;
 
     return (
-        <div>
+        <div className={"main-container"}>
+            <div className={"d-flex justify-content-center flex-column header-container"}>
             <div className="d-flex justify-content-center">
-                <button className="btn btn-success mb-4 mt-4">Météo</button>
+                <button className="btn btn-success mb-4 mt-4 main-title">Météo</button>
             </div>
+
             <Period>
                 {getNextDaysOfTheWeek(today, 5).map(function (day) {
 
@@ -234,37 +238,34 @@ function App() {
                     )
                 })
                 }
-
             </Period>
 
             <h2 className={"text-center"}>Météo de {submittedCity}</h2>
             <form action="" onSubmit={handleSubmit} className={"d-flex justify-content-center"}>
                 <div className="form-group mx-sm-2 mb-2">
-                    <input type="text" placeholder="Search.." className={"text-center"}/>
-                    <button type="submit" className={"text-center btn btn-primary ml-2"}>Submit</button>
+                    <input type="text" placeholder="recherche.." className={"text-center"}/>
+                    <button type="submit" className={"text-center btn btn-primary ml-2"}>Rechercher</button>
                 </div>
             </form>
+            </div>
             {loading ? <Spinner color="dark" type="grow"/>
                 : error ? <AlertError title={true} color={"warning"} pContent={error.response} bottomContent={error.message}/>
                     : (
 
-                        <div className="text-center mt-3" style={{
-                            display: "flex",
-                            justifyContent: "space-evenly"
+                        <div className="text-center mt-3 meteo-card-container">
 
-                        }}>
+                            {
+                                activeDayMeteo.map((hour) => {
+                                    i += 3;
 
-                            {activeDayMeteo ?
-                                activeDayMeteo.map((hour) =>
-                                    <div className={"bg bg-secondary rounded"}
-                                         style={{width: "20%", border: "1px black solid"}}
-
+                                    return <div className={"bg bg-secondary rounded meteo-card"}
                                     ><Meteo
-                                        meteo={hour} activeDay={activeDay}
+                                        meteo={hour} activeDay={activeDay} index={i}
                                     />
-                                    </div>) : <div>ERROR</div>
+                                    </div>})
                             }</div>
-                    )}
+                    )
+            }
         </div>
     );
 }

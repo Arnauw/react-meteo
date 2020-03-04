@@ -4,9 +4,9 @@ import './Day';
 
 export function Period({children}) {
     return (
-            <div className="d-flex justify-content-center">
-                <nav aria-label="...">
-                    <ul className="pagination pagination-lg">
+            <div className="days-container">
+                <nav className={"days-nav"} aria-label="...">
+                    <ul className="d-flex justify-content-center">
                         {children}
                     </ul>
                 </nav>
