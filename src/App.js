@@ -127,7 +127,7 @@ function App() {
 
             console.log('CALL API 2');
 
-            const URLmeteo = `http://api.openweathermap.org/data/2.5/forecast?q=${visitorCity}&units=${units}&appid=${meteo_key}&lang=fr`;
+            const URLmeteo = `https://api.openweathermap.org/data/2.5/forecast?q=${visitorCity}&units=${units}&appid=${meteo_key}&lang=fr`;
 
             const meteoResponse = await fetch(URLmeteo);
 
