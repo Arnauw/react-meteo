@@ -1,6 +1,6 @@
 # React Weather App
 
-[Live at : your-link-here](https://meteo.arnaudrabel.com)
+[Live at : meteo.arnaudrabel.com](https://meteo.arnaudrabel.com)
 
 A simple React application that displays a 5-day weather forecast for a searched city. The project was recently modernized from its original 2020-era codebase to a 2025/2026 standard using Vite and TypeScript.
 
