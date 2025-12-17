@@ -1,6 +1,8 @@
 # React Weather App
 
-A simple, not finished, React application that displays a 5-day weather forecast for a searched city. The project was recently modernized from its original 2020-era codebase to a 2025/2026 standard using Vite and TypeScript.
+[Live at : your-link-here](https://meteo.arnaudrabel.com)
+
+A simple React application that displays a 5-day weather forecast for a searched city. The project was recently modernized from its original 2020-era codebase to a 2025/2026 standard using Vite and TypeScript.
 
 ## Tech Stack
 - **React**: For building the user interface.
