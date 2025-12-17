@@ -1,8 +1,12 @@
-import React from 'react';
 import './App.css';
-import './Day';
+import './Day.tsx';
+import type {ReactNode} from "react";
 
-export function Period({children}) {
+type PeriodProps = {
+    children: ReactNode;
+}
+
+export function Period({children}: PeriodProps) {
     return (
             <div className="days-container">
                 <nav className={"days-nav"} aria-label="...">
